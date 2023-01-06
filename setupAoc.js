@@ -67,7 +67,7 @@ function setupDayFiles(year, day) {
 		}
 	}
 
-	for (let emptyFile of ["input.txt", "solution.txt"]) {
+	for (let emptyFile of ["input.txt", "A_solution.txt", "B_solution.txt"]) {
 		try {
 			fs.writeFileSync(rootFolder + "/" + year + "/" + day + "/" + emptyFile, "")
 		} catch (e) {
