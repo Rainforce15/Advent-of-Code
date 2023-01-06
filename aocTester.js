@@ -28,8 +28,6 @@ let tableHeader = "     | 01  02  03  04  05  06  07  08  09  10  11  12  13  14
 
 if (yearPattern.test(argYear)) {
 
-	console.log(tableHeader)
-
 	if (dayPattern.test(argDay)) {
 		if (abPattern.test(argAB)) {
 			console.log(`running ${argYear}/${argDay}/${argAB}...\n`)
@@ -39,9 +37,9 @@ if (yearPattern.test(argYear)) {
 			runDay(argYear, argDay).then()
 		}
 	} else {
+		console.log(tableHeader)
 		runYear(argYear).then()
 	}
-	console.log("done.")
 } else {
 	console.log("running everything (this may take a while)...\n")
 
