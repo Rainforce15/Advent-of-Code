@@ -2,9 +2,10 @@ let fs = require("fs")
 let args = [...process.argv];
 
 let golfSuffix = "_time";
-if (args.includes("-space")) {
+if (args.includes("--space") || args.includes("-s")) {
 	golfSuffix = "_space";
 	args.splice(args.indexOf("-space"), 1)
+	args.splice(args.indexOf("-s"), 1)
 	console.log("running space-optimised versions...");
 }
 
