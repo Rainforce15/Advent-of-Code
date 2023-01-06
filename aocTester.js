@@ -5,8 +5,8 @@ let golfSuffix = "_time";
 if (args.includes("-space")) {
 	golfSuffix = "_space";
 	args.splice(args.indexOf("-space"), 1)
+	console.log("running space-optimised versions...");
 }
-console.log("running space-optimised versions...");
 
 let rootFolder = "tasks"
 
