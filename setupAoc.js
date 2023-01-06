@@ -29,12 +29,14 @@ if (yearPattern.test(argYear)) {
 }
 
 function setupYear(year) {
+	let fullPath = rootFolder + "/" + year;
+
 	try {
-		fs.mkdirSync(rootFolder + "/" + year)
+		fs.mkdirSync(fullPath)
 	} catch (e) {
 		if (e.code === "ENOENT") {
 			fs.mkdirSync(rootFolder)
-			fs.mkdirSync(rootFolder + "/" + year)
+			fs.mkdirSync(fullPath)
 		}
 		else if (e.code !== "EEXIST") throw e
 	}
@@ -45,12 +47,14 @@ function setupYear(year) {
 }
 
 function setupDay(year, day) {
+	let fullPath = rootFolder + "/" + year + "/" + day.toString().padStart(2, "0");
+
 	try {
-		fs.mkdirSync(rootFolder + "/" + year + "/" + day)
+		fs.mkdirSync(fullPath)
 	} catch (e) {
 		if (e.code === "ENOENT") {
 			fs.mkdirSync(rootFolder + "/" + year)
-			fs.mkdirSync(rootFolder + "/" + year + "/" + day)
+			fs.mkdirSync(fullPath)
 		}
 		else if (e.code !== "EEXIST") throw e
 	}
@@ -59,9 +63,11 @@ function setupDay(year, day) {
 }
 
 function setupDayFiles(year, day) {
+	let basePath = rootFolder + "/" + year + "/" + day.toString().padStart(2, "0") + "/"
+
 	for (let solverFile of ["A_time.js", "A_space.js", "B_time.js", "B_space.js"]) {
 		try {
-			fs.writeFileSync(rootFolder + "/" + year + "/" + day + "/" + solverFile, solverTemplate)
+			fs.writeFileSync(basePath + solverFile, solverTemplate)
 		} catch (e) {
 			if (e.code !== "EEXIST") throw e
 		}
@@ -69,7 +75,7 @@ function setupDayFiles(year, day) {
 
 	for (let emptyFile of ["input.txt", "A_solution.txt", "B_solution.txt"]) {
 		try {
-			fs.writeFileSync(rootFolder + "/" + year + "/" + day + "/" + emptyFile, "")
+			fs.writeFileSync(basePath + emptyFile, "")
 		} catch (e) {
 			if (e.code !== "EEXIST") throw e
 		}
