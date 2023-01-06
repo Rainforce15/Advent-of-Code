@@ -1,0 +1,1 @@
+module.exports=n=>n.trim().split("\n").map(t=>(([l,w,h])=>l+l+w+w+l*w*h)(t.split("x").map(x=>parseInt(x)).sort((a,b)=>a-b))).reduce((s,v)=>s+v)
