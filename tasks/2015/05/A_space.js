@@ -1,0 +1,1 @@
+module.exports=n=>n.split("\n").reduce((s,v)=>s+(v.replace(/[^aeiou]/g,"").length>2&&/^(?=.*(.)\1)(?:(?!ab|cd|pq|xy).)*$/.test(v)?1:0),0)
