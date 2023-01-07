@@ -1,0 +1,1 @@
+let g=[],x,y;module.exports=n=>(n.trim().split("\n").forEach(l=>{let [u,v,w,z]=l.split(/\W/).map(e=>parseInt(e)).filter(e=>e);for(x=u;x++<=w;)for(y=v;y++<=z;){n=x+y*1000;g[n]={n:1," ":!g[n]}[l[6]]||0}}),g.reduce((s,v)=>s+v))
