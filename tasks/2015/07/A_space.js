@@ -1,0 +1,1 @@
+module.exports=n=>{let w={},l,v=v=>w[v]==n.u?parseInt(v):w[v];while(w.a==n.u)for(l of n.trim().split("\n"))(l=>{while(l.length<4)l.unshift(l.a);let [h,i,j,k]=l,A=v(h),B=v(j);!isNaN(h?A+B:B)&&(w[k]={I:a=>a,N:a=>~a,L:(b,a)=>a<<b,R:(b,a)=>a>>b,A:(b,a)=>a&b,O:(b,a)=>a|b}[(i||[])[0]||"I"](B,A)&0xFFFF)})(l.split(/ -> | /));return w.a}
