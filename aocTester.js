@@ -14,7 +14,7 @@ let rootFolder = "tasks"
 
 let yearPattern = /\d{4,}/
 let dayPattern = /[1-9]|1\d|2[0-5]/
-let abPattern = /[ab]/
+let abPattern = /[AB]/
 
 if (["--help", "-h"].includes(args[2])) {
 	console.log(fs.readFileSync("aocTester_help.md", "utf-8"));
@@ -32,7 +32,7 @@ if (yearPattern.test(argYear)) {
 	if (dayPattern.test(argDay)) {
 		if (abPattern.test(argAB)) {
 			console.log(`running ${argYear}/${argDay}/${argAB}...\n`)
-			runTask(argYear, argDay, argAB).then()
+			runDayTask(argYear, argDay, argAB).then()
 		} else {
 			console.log(`running ${argYear}/${argDay}...\n`)
 			runDay(argYear, argDay).then()
@@ -60,6 +60,20 @@ async function runDay(year, day) {
 	} else {
 		await runTask(year, day, "A", input)
 		await runTask(year, day, "B", input)
+	}
+}
+
+async function runDayTask(year, day, ab) {
+	let inputPath = rootFolder + "/" + year + "/" + day.toString().padStart(2, "0") + "/input.txt";
+	let input = null;
+	try {
+		input = fs.readFileSync(inputPath, "utf-8")
+	} catch (e) {}
+
+	if (input === null || input === "") {
+		process.stdout.write("NOIN")
+	} else {
+		await runTask(year, day, ab, input)
 	}
 }
 
