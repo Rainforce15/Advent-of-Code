@@ -58,8 +58,10 @@ async function runDay(year, day) {
 	if (input === null || input === "") {
 		process.stdout.write("NOIN")
 	} else {
-		await runTask(year, day, "A", input)
-		await runTask(year, day, "B", input)
+		let wrongResA = await runTask(year, day, "A", input)
+		let wrongResB = await runTask(year, day, "B", input)
+		if (wrongResA) console.log(" provided result A:", wrongResA)
+		if (wrongResB) console.log(" provided result B:", wrongResB)
 	}
 }
 
@@ -73,7 +75,8 @@ async function runDayTask(year, day, ab) {
 	if (input === null || input === "") {
 		process.stdout.write("NOIN")
 	} else {
-		await runTask(year, day, ab, input)
+		let wrongRes = await runTask(year, day, ab, input)
+		if (wrongRes) console.log("provided result:", wrongRes);
 	}
 }
 
@@ -114,10 +117,12 @@ async function runTask(year, day, ab, input) {
 			process.stdout.write("\n\n")
 			console.log(`no solution for ${ab}, providing: ${solver(input)}`)
 		} else {
-			if (solver(input).toString() === sol) {
+			let result = solver(input).toString()
+			if (result === sol) {
 				process.stdout.write("██")
 			} else {
 				process.stdout.write("XX")
+				return result
 			}
 		}
 	}
