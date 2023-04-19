@@ -11,4 +11,4 @@ The following operations are possible:
 - `node aocTester.js 2015 5 B` to test a given solver in the given year and day (e.g. the B solution of the fifth day of 2015)
 
 optional arguments:
-- `--space`, `-s`: test the smallest possible code variant. likely impossible to finish.
+- `--space`, `-s`: test the smallest possible code variant.
