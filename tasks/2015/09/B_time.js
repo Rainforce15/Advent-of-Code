@@ -37,7 +37,6 @@ module.exports = function(input) {
 
 				if (curPath.length >= map._.length - 1) {
 					if (bound == null || targetLen < bound){
-						console.log(rootCity, curPath, longestEdge * (map._.length - 1) - targetLen)
 						bound = targetLen
 					}
 				} else {

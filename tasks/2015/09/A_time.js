@@ -21,8 +21,6 @@ module.exports = function(input) {
 
 	map["_"] = Object.entries(map).map(e => [e[0], e[1]["+"]]).sort((a, b) => a[1] - b[1]).map(e => e[0])
 
-	console.log(map)
-
 	let bound = null;
 	for (let rootCity of map._) {
 		(function shortestPath(curPath, len) {
@@ -36,7 +34,6 @@ module.exports = function(input) {
 
 				if (curPath.length >= map._.length - 1) {
 					if (bound == null || targetLen < bound) {
-						console.log(curPath, targetLen)
 						bound = targetLen
 					}
 				} else {
