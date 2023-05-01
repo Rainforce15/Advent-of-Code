@@ -10,6 +10,10 @@ if (args.includes("--space") || args.includes("-s")) {
 	console.log("running space-optimised versions...");
 }
 
+let A = "A";
+let B = "B";
+
+let resultSet = {};
 let rootFolder = "tasks"
 
 let yearPattern = /\d{4,}/
@@ -27,26 +31,30 @@ let argAB = args[4];
 
 let tableHeader = "     | 01  02  03  04  05  06  07  08  09  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25 \n-----+----------------------------------------------------------------------------------------------------"
 
-if (yearPattern.test(argYear)) {
-
-	if (dayPattern.test(argDay)) {
-		if (abPattern.test(argAB)) {
-			console.log(`running ${argYear}/${argDay}/${argAB}...\n`)
-			runDayTask(argYear, argDay, argAB.toUpperCase()).then()
+async function main() {
+	if (yearPattern.test(argYear)) {
+		if (dayPattern.test(argDay)) {
+			if (abPattern.test(argAB)) {
+				console.log(`running ${argYear}/${argDay}/${argAB}...\n`)
+				await runDayTask(argYear, argDay, argAB.toUpperCase())
+			} else {
+				console.log(`running ${argYear}/${argDay}...\n`)
+				await runDay(argYear, argDay)
+			}
 		} else {
-			console.log(`running ${argYear}/${argDay}...\n`)
-			runDay(argYear, argDay).then()
+			console.log(tableHeader)
+			await runYear(argYear)
 		}
 	} else {
-		console.log(tableHeader)
-		runYear(argYear).then()
-	}
-} else {
-	console.log("running everything (this may take a while)...\n")
+		console.log("running everything (this may take a while)...\n")
 
-	console.log(tableHeader)
-	runEverything().then()
+		console.log(tableHeader)
+		await runEverything()
+		printResult()
+	}
+
 }
+main().then()
 
 async function runDay(year, day) {
 	let inputPath = rootFolder + "/" + year + "/" + day.toString().padStart(2, "0") + "/input.txt";
@@ -56,10 +64,10 @@ async function runDay(year, day) {
 	} catch (e) {}
 
 	if (input === null || input === "") {
-		process.stdout.write("NOIN")
+		writeResult("NO INPUT", year, day)
 	} else {
-		let wrongResA = await runTask(year, day, "A", input)
-		let wrongResB = await runTask(year, day, "B", input)
+		let wrongResA = await runTask(year, day, A, input)
+		let wrongResB = await runTask(year, day, B, input)
 		if (wrongResA) console.log(" provided result A:", wrongResA)
 		if (wrongResB) console.log(" provided result B:", wrongResB)
 	}
@@ -73,7 +81,7 @@ async function runDayTask(year, day, ab) {
 	} catch (e) {}
 
 	if (input === null || input === "") {
-		process.stdout.write("NOIN")
+		writeResult("NO INPUT", year, day, ab)
 	} else {
 		let wrongRes = await runTask(year, day, ab, input)
 		if (wrongRes) console.log(" provided result:", wrongRes);
@@ -81,7 +89,7 @@ async function runDayTask(year, day, ab) {
 }
 
 async function runYear(year) {
-	process.stdout.write(year + " |")
+	writeNewYear(year)
 	for (let day = 1; day <= 25; day++) {
 		await runDay(year, day)
 	}
@@ -111,7 +119,7 @@ async function runTask(year, day, ab, input) {
 	} catch (e) {}
 
 	if (solver === null) {
-		process.stdout.write("!!")
+		writeResult("!", year, day, ab)
 	} else {
 		if (sol === null || sol === "") {
 			process.stdout.write("\n\n")
@@ -119,11 +127,75 @@ async function runTask(year, day, ab, input) {
 		} else {
 			let result = solver(input).toString()
 			if (result === sol) {
-				process.stdout.write("██")
+				writeResult("O", year, day, ab)
 			} else {
-				process.stdout.write("XX")
+				writeResult("X", year, day, ab)
 				return result
 			}
 		}
 	}
+}
+
+function writeNewYear(year) {
+	process.stdout.write(year + " |")
+}
+
+function writeResult(res, year, day, ab) {
+	day = parseInt(day) - 1
+
+	resultSet[year] = resultSet[year] ?? []
+	resultSet[year][day] = resultSet[year][day] ?? {}
+	if (ab === undefined) {
+		resultSet[year][day][A] = res
+		resultSet[year][day][B] = res
+	} else {
+		resultSet[year][day][ab] = res
+	}
+
+	switch (res) {
+		case "NO INPUT":
+			process.stdout.write("░░░░");
+			break;
+		case "O":
+			process.stdout.write("██");
+			break;
+		case "!":
+			process.stdout.write("!!");
+			break;
+		case "X":
+			process.stdout.write("XX");
+			break;
+	}
+}
+
+function printResult() {
+	let markdown =
+		"Current Progress\n" +
+		"----------------\n" +
+		"```\n" +
+		"     ║          1111111111222222\n" +
+		"     ║ 1234567890123456789012345\n" +
+		"─────╫──────────────────────────\n"
+
+	for (let year in resultSet) {
+		markdown += year + " ║ "
+		for (let day in resultSet[year]) {
+			let abRes = resultSet[year][day]
+			if (abRes.A === "O" && abRes.B === "O") {
+				markdown += "█"
+			} else if(abRes.A === "O") {
+				markdown += "▀"
+			} else if(abRes.B === "O") {
+				markdown += "▄"
+			} else {
+				markdown += "░"
+			}
+		}
+		markdown += "\n"
+	}
+	markdown += "```\n\n"
+
+	let readme = fs.readFileSync("README.md", "utf-8")
+	readme = readme.replace(/Current Progress\n(.|\n)+\n\n/gm, markdown)
+	fs.writeFileSync("README.md", readme)
 }
