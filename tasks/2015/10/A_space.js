@@ -1,0 +1,1 @@
+let n,c,S=module.exports=(N,I=39,R="",i=0)=>{while(i<N.length){n=N[i];c=1;while(N[i+c]==n)c++;R+=c+n;i+=c}return I>0?S(R,I-1):R.length}
